@@ -2,7 +2,6 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Taille du Zizi</title>
   <style>
     body {
@@ -10,267 +9,64 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      justify-content: center;
+      height: 100vh;
       margin: 0;
-      color: #fff;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-      padding: 40px 20px 60px;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
     }
-
-    h1 {
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
       margin-bottom: 20px;
-      font-size: 2em;
-    }
-
-    input[type="text"] {
-      padding: 12px 20px;
-      font-size: 1.2em;
       width: 300px;
-      border: none;
-      border-radius: 30px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      outline: none;
-      transition: 0.3s;
-      text-align: center;
     }
-
-    input[type="text"]:focus {
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
-    }
-
     #result {
-      margin-top: 30px;
-      font-size: 1.6em;
-      font-weight: bold;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 10px 20px;
-      border-radius: 20px;
-      min-height: 2.2em;
-      text-align: center;
-    }
-
-    #retryBtn {
-      margin-top: 25px;
-      font-size: 1.4em;
-      cursor: pointer;
-      background: rgba(255 255 255 / 0.3);
-      color: #fff;
-      border: none;
-      border-radius: 25px;
-      padding: 8px 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      transition: background-color 0.3s ease;
-    }
-    #retryBtn:hover {
-      background: rgba(255 255 255 / 0.5);
-    }
-
-    h2 {
-      margin-top: 60px;
-      color: white;
-      text-shadow: 1px 1px 3px black;
-      font-weight: 600;
-    }
-
-    table {
-      width: 90%;
-      max-width: 600px;
-      margin-top: 10px;
-      border-collapse: collapse;
-      color: white;
-      text-shadow: 1px 1px 2px black;
-    }
-    th, td {
-      padding: 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
-    }
-    th {
-      border-bottom: 2px solid white;
-      text-align: left;
-    }
-    td {
-      text-align: right;
+      font-size: 24px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <h1 id="title">Quelle est la taille du zizi de :</h1>
-  <input type="text" id="nameInput" placeholder="Entrez un prénom..." autocomplete="off" />
+  <input id="nameInput" type="text" placeholder="Entrez un prénom..." />
   <div id="result"></div>
-  <button id="retryBtn" style="display:none;">Réessayer</button>
-
-  <h2>Statistiques des prénoms</h2>
-  <table id="statsTable">
-    <thead>
-      <tr>
-        <th>Prénom</th>
-        <th>Utilisations</th>
-        <th>Moyenne (cm)</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
 
   <script>
     const input = document.getElementById("nameInput");
-    const title = document.getElementById("title");
     const result = document.getElementById("result");
-    const retryBtn = document.getElementById("retryBtn");
+    const title = document.getElementById("title");
 
-    let modeInvisible = false;
-
-    document.addEventListener("keydown", function (e) {
-      if (e.ctrlKey && e.key.toLowerCase() === "i") {
-        modeInvisible = true;
-        console.log("💡 Mode invisible activé !");
-      }
-    });
-
-    const tinySizes = [
-      "0.0000000000000001 cm",
-      "1 yoctomètre (ym)",
-      "6.9 attomètres (am)",
-      "0.0000001 nanomètres (nm)",
-      "Zéro. Nada. Le néant.",
-      "La physique refuse de le mesurer.",
-      "C’est un point quantique.",
-      "Inobservable même par un microscope électronique."
-    ];
-
-    const funnyTexts = [
-      "Incroyable !",
-      "Sans commentaire...",
-      "Tu rêves !",
-      "Top secret 🤫",
-      "Mystère...",
-      "👀",
-      "C’est un secret d’état.",
-      "Plus grand que l’univers."
-    ];
-
-    const konamiCode = [
-      "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
-      "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
-      "b", "a"
-    ];
-    let konamiIndex = 0;
-
-    document.addEventListener("keydown", function (e) {
-      if (e.key === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiCode.length) {
-          title.textContent = "La taille du zizi de Dieu est :";
-          result.textContent = "∞ cm 🌌🍆";
-          if (input) input.remove();
-          retryBtn.style.display = "inline-block";
-          konamiIndex = 0;
-        }
-      } else {
-        konamiIndex = 0;
-      }
-    });
-
-    function afficherResultat(prenom, taille) {
-      title.textContent = `La taille du zizi de ${prenom} est :`;
-      if (modeInvisible) {
-        const tiny = tinySizes[Math.floor(Math.random() * tinySizes.length)];
-        result.textContent = `${tiny} 🍆`;
-      } else {
-        result.textContent = `${taille} cm 🍆`;
-      }
-      retryBtn.style.display = "inline-block";
-    }
-
-    // Envoi taille au backend
-    async function envoyerTaille(prenom, taille) {
-      try {
-        const response = await fetch('http://localhost:3000/taille', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prenom, taille: parseFloat(taille) })
-        });
-        const data = await response.json();
-        console.log(data.message);
-        // Recharge stats un peu après
-        setTimeout(chargerStats, 3000);
-      } catch (err) {
-        console.error("Erreur envoi taille:", err);
-      }
-    }
-
-    input.addEventListener("keypress", function (e) {
+    input.addEventListener("keypress", async function (e) {
       if (e.key === "Enter") {
         const name = input.value.trim();
-        if (!name) {
-          result.textContent = "Entre un prénom d'abord !";
-          return;
-        }
+        if (!name) return;
 
-        input.disabled = true;
-        retryBtn.style.display = "none";
-        let count = 0;
+        input.remove();
+        title.textContent = `La taille du zizi de ${name} est :`;
 
-        const suspense = setInterval(() => {
-          if (Math.random() < 0.2) {
-            // Affiche parfois un texte fun à la place d'un chiffre
-            result.textContent = funnyTexts[Math.floor(Math.random() * funnyTexts.length)];
-          } else {
-            const randomSize = (Math.random() * 30 + 1).toFixed(1);
-            result.textContent = `${randomSize} cm...`;
-          }
-          count++;
+        let suspense = 0;
+        const suspenseInterval = setInterval(() => {
+          result.textContent = `${(Math.random() * 30).toFixed(1)} cm...`;
+          suspense++;
         }, 100);
 
-        setTimeout(() => {
-          clearInterval(suspense);
-          const finalSize = (Math.random() * 30 + 1).toFixed(1);
-          afficherResultat(name, finalSize);
-          envoyerTaille(name, finalSize);
+        setTimeout(async () => {
+          clearInterval(suspenseInterval);
+          const finalSize = (Math.random() * 30).toFixed(1);
+          result.textContent = `${finalSize} cm 🍆`;
+
+          // Envoie des données au serveur
+          await fetch("https://site-zizi-production.up.railway.app/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, size: finalSize })
+          });
         }, 2000);
       }
-    });
-
-    retryBtn.addEventListener("click", () => {
-      title.textContent = "Quelle est la taille du zizi de :";
-      result.textContent = "";
-      input.value = "";
-      input.disabled = false;
-      input.focus();
-      retryBtn.style.display = "none";
-    });
-
-    async function chargerStats() {
-      try {
-        const response = await fetch('http://localhost:3000/stats');
-        const stats = await response.json();
-
-        const tbody = document.querySelector('#statsTable tbody');
-        tbody.innerHTML = ""; // Vide tableau
-
-        if (stats.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:10px;">Aucune donnée disponible.</td></tr>`;
-          return;
-        }
-
-        stats.forEach(stat => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td style="padding: 6px 8px; text-align:left;">${stat.prenom}</td>
-            <td style="padding: 6px 8px; text-align:right;">${stat.count}</td>
-            <td style="padding: 6px 8px; text-align:right;">${stat.avgTaille}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      } catch (error) {
-        console.error("Erreur chargement stats:", error);
-      }
-    }
-
-    window.addEventListener('load', () => {
-      chargerStats();
-      input.focus();
     });
   </script>
 </body>
