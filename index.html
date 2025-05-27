@@ -74,7 +74,7 @@
 
     async function checkConnection() {
       try {
-        const res = await fetch("https://site-zizi-production.up.railway.app/ping");
+        const res = await fetch("https://site-zizi-backend-production.up.railway.app/ping");
         const data = await res.json();
         status.textContent = data.connected ? "🟢 Connecté" : "🔴 Déconnecté";
       } catch (e) {
@@ -104,11 +104,11 @@
           const finalSize = (Math.random() * 30).toFixed(1);
           result.textContent = `${finalSize} cm 🍆`;
 
-          await fetch("https://site-zizi-production.up.railway.app/add", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, size: finalSize })
-          });
+          await fetch("https://site-zizi-backend-production.up.railway.app/add", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name, size: finalSize })
+});
         }, 2000);
       }
     });
