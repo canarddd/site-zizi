@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Taille du Zizi</title>
   <style>
     body {
@@ -9,108 +10,200 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: flex-start;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+      padding: 40px 20px 60px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+
+    input[type="text"] {
+      padding: 12px 20px;
+      font-size: 1.2em;
+      width: 300px;
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      outline: none;
+      transition: 0.3s;
       text-align: center;
     }
-    input {
-      padding: 10px;
-      font-size: 18px;
-      border-radius: 10px;
-      border: none;
-      margin-bottom: 20px;
-      width: 300px;
+
+    input[type="text"]:focus {
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
     }
+
     #result {
-      font-size: 24px;
-      margin-top: 20px;
+      margin-top: 30px;
+      font-size: 1.6em;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px 20px;
+      border-radius: 20px;
+      min-height: 2.2em;
+      text-align: center;
     }
-    #status {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 20px;
+
+    #retryBtn {
+      margin-top: 25px;
+      font-size: 1.4em;
+      cursor: pointer;
+      background: rgba(255 255 255 / 0.3);
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      padding: 8px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
     }
-    footer {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      right: 10px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
+    #retryBtn:hover {
+      background: rgba(255 255 255 / 0.5);
     }
-    footer a {
+
+    h2 {
+      margin-top: 60px;
       color: white;
-      text-decoration: none;
-      margin: 0 10px;
+      text-shadow: 1px 1px 3px black;
+      font-weight: 600;
+    }
+
+    table {
+      width: 90%;
+      max-width: 600px;
+      margin-top: 10px;
+      border-collapse: collapse;
+      color: white;
+      text-shadow: 1px 1px 2px black;
+    }
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+    th {
+      border-bottom: 2px solid white;
+      text-align: left;
+    }
+    td {
+      text-align: right;
     }
   </style>
 </head>
 <body>
-  <div id="status">🔴 Déconnecté</div>
   <h1 id="title">Quelle est la taille du zizi de :</h1>
-  <input id="nameInput" type="text" placeholder="Entrez un prénom..." />
+  <input type="text" id="nameInput" placeholder="Entrez un prénom..." autocomplete="off" />
   <div id="result"></div>
+  <button id="retryBtn" style="display:none;">Réessayer</button>
 
-  <footer>
-    <div>
-      <a href="#">Autre site</a>
-    </div>
-    <div>
-      <a href="https://www.paypal.com/paypalme/AntoineGosset1" target="_blank">PayPal</a>
-      <a href="https://buymeacoffee.com/canardd" target="_blank">Buy Me a Coffee</a>
-    </div>
-  </footer>
+  <h2>Statistiques des prénoms</h2>
+  <table id="statsTable">
+    <thead>
+      <tr>
+        <th>Prénom</th>
+        <th>Utilisations</th>
+        <th>Moyenne (cm)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
   <script>
     const input = document.getElementById("nameInput");
-    const result = document.getElementById("result");
     const title = document.getElementById("title");
-    const status = document.getElementById("status");
+    const result = document.getElementById("result");
+    const retryBtn = document.getElementById("retryBtn");
 
-    async function checkConnection() {
+    function afficherResultat(prenom, taille) {
+      title.textContent = `La taille du zizi de ${prenom} est :`;
+      result.textContent = `${taille} cm 🍆`;
+      retryBtn.style.display = "inline-block";
+    }
+
+    async function envoyerTaille(prenom, taille) {
       try {
-        const res = await fetch("https://site-zizi-backend-production.up.railway.app/ping");
-        const data = await res.json();
-        status.textContent = data.connected ? "🟢 Connecté" : "🔴 Déconnecté";
-      } catch (e) {
-        status.textContent = "🔴 Déconnecté";
+        await fetch('http://localhost:3000/taille', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prenom, taille: parseFloat(taille) })
+        });
+        setTimeout(chargerStats, 3000);
+      } catch (err) {
+        console.error("Erreur envoi taille:", err);
       }
     }
 
-    checkConnection();
-    setInterval(checkConnection, 20000);
-
-    input.addEventListener("keypress", async function (e) {
+    input.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         const name = input.value.trim();
-        if (!name) return;
+        if (!name) {
+          result.textContent = "Entre un prénom d'abord !";
+          return;
+        }
 
-        input.remove();
-        title.textContent = `La taille du zizi de ${name} est :`;
+        input.disabled = true;
+        retryBtn.style.display = "none";
 
-        let suspense = 0;
-        const suspenseInterval = setInterval(() => {
-          result.textContent = `${(Math.random() * 30).toFixed(1)} cm...`;
-          suspense++;
+        let count = 0;
+        const suspense = setInterval(() => {
+          const randomSize = (Math.random() * 30 + 1).toFixed(1);
+          result.textContent = `${randomSize} cm...`;
+          count++;
         }, 100);
 
-        setTimeout(async () => {
-          clearInterval(suspenseInterval);
-          const finalSize = (Math.random() * 30).toFixed(1);
-          result.textContent = `${finalSize} cm 🍆`;
-
-          await fetch("https://site-zizi-backend-production.up.railway.app/add", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ name, size: finalSize })
-});
+        setTimeout(() => {
+          clearInterval(suspense);
+          const finalSize = (Math.random() * 30 + 1).toFixed(1);
+          afficherResultat(name, finalSize);
+          envoyerTaille(name, finalSize);
         }, 2000);
       }
+    });
+
+    retryBtn.addEventListener("click", () => {
+      title.textContent = "Quelle est la taille du zizi de :";
+      result.textContent = "";
+      input.value = "";
+      input.disabled = false;
+      input.focus();
+      retryBtn.style.display = "none";
+    });
+
+    async function chargerStats() {
+      try {
+        const response = await fetch('http://localhost:3000/all');
+        const stats = await response.json();
+
+        const tbody = document.querySelector('#statsTable tbody');
+        tbody.innerHTML = ""; // Vide tableau
+
+        if (stats.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:10px;">Aucune donnée disponible.</td></tr>`;
+          return;
+        }
+
+        stats.forEach(stat => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="padding: 6px 8px; text-align:left;">${stat.name}</td>
+            <td style="padding: 6px 8px; text-align:right;">${stat.count}</td>
+            <td style="padding: 6px 8px; text-align:right;">${stat.average.toFixed(1)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        console.error("Erreur chargement stats:", error);
+      }
+    }
+
+    window.addEventListener('load', () => {
+      chargerStats();
+      input.focus();
     });
   </script>
 </body>
