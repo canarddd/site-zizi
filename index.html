@@ -49,6 +49,12 @@
       border-radius: 20px;
       min-height: 2.2em;
       text-align: center;
+      /* Pour éviter le truc bizarre quand vide */
+      visibility: hidden;
+    }
+
+    #result.visible {
+      visibility: visible;
     }
 
     #retryBtn {
@@ -65,6 +71,23 @@
     }
     #retryBtn:hover {
       background: rgba(255 255 255 / 0.5);
+    }
+
+    #loginBtn {
+      margin-top: 20px;
+      font-size: 1.2em;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 20px;
+      background-color: rgba(255 255 255 / 0.3);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+    }
+    #loginBtn:hover {
+      background-color: rgba(255 255 255 / 0.6);
+      color: #000;
     }
 
     h2 {
@@ -93,11 +116,39 @@
     td {
       text-align: right;
     }
+
+    footer {
+      margin-top: auto;
+      padding: 15px 10px;
+      font-size: 0.9em;
+      color: white;
+      text-shadow: none;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+      width: 100%;
+      box-sizing: border-box;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+    }
+
+    footer a {
+      color: #fdfdfd;
+      text-decoration: underline;
+      margin: 0 8px;
+      transition: color 0.3s ease;
+    }
+    footer a:hover {
+      color: #000;
+    }
   </style>
 </head>
 <body>
   <h1 id="title">Quelle est la taille du zizi de :</h1>
   <input type="text" id="nameInput" placeholder="Entrez un prénom..." autocomplete="off" />
+  
+  <button id="loginBtn">Se connecter</button>
+
   <div id="result"></div>
   <button id="retryBtn" style="display:none;">Réessayer</button>
 
@@ -113,15 +164,37 @@
     <tbody></tbody>
   </table>
 
+  <footer>
+    <a href="https://github.com/">GitHub</a> | 
+    <a href="https://fr.wikipedia.org/wiki/Prénom">Infos Prénoms</a> | 
+    <a href="https://contact.example.com">Contact</a>
+  </footer>
+
   <script>
     const input = document.getElementById("nameInput");
     const title = document.getElementById("title");
     const result = document.getElementById("result");
     const retryBtn = document.getElementById("retryBtn");
+    const loginBtn = document.getElementById("loginBtn");
+
+    let connected = false;
+
+    loginBtn.addEventListener("click", () => {
+      connected = !connected;
+      loginBtn.textContent = connected ? "Se déconnecter" : "Se connecter";
+      if (connected) {
+        loginBtn.style.backgroundColor = "rgba(255 255 255 / 0.6)";
+        loginBtn.style.color = "#000";
+      } else {
+        loginBtn.style.backgroundColor = "rgba(255 255 255 / 0.3)";
+        loginBtn.style.color = "#fff";
+      }
+    });
 
     function afficherResultat(prenom, taille) {
       title.textContent = `La taille du zizi de ${prenom} est :`;
       result.textContent = `${taille} cm 🍆`;
+      result.classList.add("visible");
       retryBtn.style.display = "inline-block";
     }
 
@@ -143,16 +216,19 @@
         const name = input.value.trim();
         if (!name) {
           result.textContent = "Entre un prénom d'abord !";
+          result.classList.add("visible");
           return;
         }
 
         input.disabled = true;
         retryBtn.style.display = "none";
+        result.classList.remove("visible");
 
         let count = 0;
         const suspense = setInterval(() => {
           const randomSize = (Math.random() * 30 + 1).toFixed(1);
           result.textContent = `${randomSize} cm...`;
+          result.classList.add("visible");
           count++;
         }, 100);
 
@@ -168,6 +244,7 @@
     retryBtn.addEventListener("click", () => {
       title.textContent = "Quelle est la taille du zizi de :";
       result.textContent = "";
+      result.classList.remove("visible");
       input.value = "";
       input.disabled = false;
       input.focus();
