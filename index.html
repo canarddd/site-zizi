@@ -5,137 +5,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Taille du Zizi</title>
   <style>
-    /* Styles de base */
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #d53369, #daae51);
-      color: #fff;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-
-    /* Status connecté/déconnecté */
-    #status {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      font-weight: bold;
-    }
-
-    #status .dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: red;
-      margin-right: 10px;
-      transition: background 0.3s;
-    }
-
-    #status.connected .dot {
-      background: limegreen;
-    }
-
-    h1, h2 {
-      text-align: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      color: #fff;
       text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+      padding: 40px 20px 60px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2em;
     }
 
     input[type="text"] {
+      padding: 12px 20px;
+      font-size: 1.2em;
       width: 300px;
-      padding: 10px;
-      font-size: 1.1em;
-      border-radius: 6px;
       border: none;
-      margin: 10px 0 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      outline: none;
+      transition: 0.3s;
+      text-align: center;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
     }
 
     #result {
-      font-size: 1.5em;
-      margin-bottom: 20px;
-      min-height: 1.5em;
+      margin-top: 30px;
+      font-size: 1.6em;
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px 20px;
+      border-radius: 20px;
+      min-height: 2.2em;
       text-align: center;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
     }
 
-    button {
-      background-color: #4CAF50;
-      border: none;
-      padding: 10px 16px;
-      font-size: 1em;
-      border-radius: 6px;
-      color: white;
+    #retryBtn {
+      margin-top: 25px;
+      font-size: 1.4em;
       cursor: pointer;
-      box-shadow: 0 4px #3e8e41;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    button:active {
-      box-shadow: 0 2px #3e8e41;
-      transform: translateY(2px);
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      max-width: 600px;
-      margin-bottom: 40px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    th, td {
-      padding: 12px;
-      text-align: center;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255 255 255 / 0.3);
       color: #fff;
+      border: none;
+      border-radius: 25px;
+      padding: 8px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+    }
+    #retryBtn:hover {
+      background: rgba(255 255 255 / 0.5);
     }
 
-    th {
-      background-color: rgba(0,0,0,0.3);
+    h2 {
+      margin-top: 60px;
+      color: white;
+      text-shadow: 1px 1px 3px black;
       font-weight: 600;
     }
 
-    tbody tr:hover {
-      background-color: rgba(255,255,255,0.15);
-    }
-
-    footer {
-      width: 100%;
+    table {
+      width: 90%;
       max-width: 600px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9em;
-      color: #ddd;
-      margin-top: auto;
-      padding: 10px 0;
+      margin-top: 10px;
+      border-collapse: collapse;
+      color: white;
+      text-shadow: 1px 1px 2px black;
     }
-
-    footer a {
-      color: #ddd;
-      text-decoration: none;
-      margin-right: 15px;
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
     }
-
-    footer a:hover {
-      text-decoration: underline;
+    th {
+      border-bottom: 2px solid white;
+      text-align: left;
+    }
+    td {
+      text-align: right;
     }
   </style>
 </head>
 <body>
-  <div id="status">
-    <div class="dot"></div>
-    <div id="statusText">Déconnecté</div>
-  </div>
-
   <h1 id="title">Quelle est la taille du zizi de :</h1>
   <input type="text" id="nameInput" placeholder="Entrez un prénom..." autocomplete="off" />
   <div id="result"></div>
@@ -153,35 +113,11 @@
     <tbody></tbody>
   </table>
 
-  <footer>
-    <div class="left-links">
-      <a href="https://www.paypal.com/paypalme/AntoineGosset1" target="_blank" rel="noopener noreferrer">PayPal</a>
-      <a href="https://www.buymeacoffee.com/canardd" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>
-    </div>
-    <div class="right-link">
-      <a href="#" title="Pas encore de site supplémentaire">Autre site</a>
-    </div>
-  </footer>
-
   <script>
     const input = document.getElementById("nameInput");
     const title = document.getElementById("title");
     const result = document.getElementById("result");
     const retryBtn = document.getElementById("retryBtn");
-    const statusDiv = document.getElementById("status");
-    const statusText = document.getElementById("statusText");
-
-    let connected = false;
-    function updateStatus() {
-      if (connected) {
-        statusDiv.classList.add("connected");
-        statusText.textContent = "Connecté";
-      } else {
-        statusDiv.classList.remove("connected");
-        statusText.textContent = "Déconnecté";
-      }
-    }
-    updateStatus();
 
     function afficherResultat(prenom, taille) {
       title.textContent = `La taille du zizi de ${prenom} est :`;
@@ -191,20 +127,14 @@
 
     async function envoyerTaille(prenom, taille) {
       try {
-        const response = await fetch('https://site-zizi-backend-production.up.railway.app/stats'), {
+        await fetch('http://localhost:3000/taille', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prenom, taille: parseFloat(taille) })
         });
-
-        if (!response.ok) throw new Error('Serveur indisponible');
         setTimeout(chargerStats, 3000);
-        connected = true;
       } catch (err) {
         console.error("Erreur envoi taille:", err);
-        connected = false;
-      } finally {
-        updateStatus();
       }
     }
 
@@ -246,12 +176,11 @@
 
     async function chargerStats() {
       try {
-        const response = await fetch('https://site-zizi-backend-production.up.railway.app/stats');
-        if (!response.ok) throw new Error('Erreur serveur stats');
+        const response = await fetch('http://localhost:3000/all');
         const stats = await response.json();
 
         const tbody = document.querySelector('#statsTable tbody');
-        tbody.innerHTML = "";
+        tbody.innerHTML = ""; // Vide tableau
 
         if (stats.length === 0) {
           tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:10px;">Aucune donnée disponible.</td></tr>`;
@@ -261,27 +190,20 @@
         stats.forEach(stat => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td style="padding: 6px 8px; text-align:left;">${stat.prenom}</td>
+            <td style="padding: 6px 8px; text-align:left;">${stat.name}</td>
             <td style="padding: 6px 8px; text-align:right;">${stat.count}</td>
-            <td style="padding: 6px 8px; text-align:right;">${stat.avgTaille.toFixed(1)}</td>
+            <td style="padding: 6px 8px; text-align:right;">${stat.average.toFixed(1)}</td>
           `;
           tbody.appendChild(tr);
         });
-
-        connected = true;
       } catch (error) {
         console.error("Erreur chargement stats:", error);
-        connected = false;
-      } finally {
-        updateStatus();
       }
     }
 
-    // ✅ Mise à jour automatique toutes les 20 secondes
     window.addEventListener('load', () => {
-      chargerStats(); // première fois
+      chargerStats();
       input.focus();
-      setInterval(chargerStats, 20000); // toutes les 20 secondes
     });
   </script>
 </body>
