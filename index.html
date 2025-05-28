@@ -191,11 +191,11 @@
 
     async function envoyerTaille(prenom, taille) {
       try {
-      const response = await fetch('http://localhost:8080/taille', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ prenom, taille: parseFloat(taille) })
-});
+        const response = await fetch('http://localhost:8080/taille', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prenom, taille: parseFloat(taille) })
+        });
 
         if (!response.ok) throw new Error('Serveur indisponible');
         setTimeout(chargerStats, 3000);
@@ -246,7 +246,7 @@
 
     async function chargerStats() {
       try {
-        const response = await fetch('http://localhost:8080/all');
+        const response = await fetch('http://localhost:8080/stats');
         if (!response.ok) throw new Error('Erreur serveur stats');
         const stats = await response.json();
 
@@ -261,9 +261,9 @@
         stats.forEach(stat => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td style="padding: 6px 8px; text-align:left;">${stat.name}</td>
+            <td style="padding: 6px 8px; text-align:left;">${stat.prenom}</td>
             <td style="padding: 6px 8px; text-align:right;">${stat.count}</td>
-            <td style="padding: 6px 8px; text-align:right;">${stat.average.toFixed(1)}</td>
+            <td style="padding: 6px 8px; text-align:right;">${stat.avgTaille.toFixed(1)}</td>
           `;
           tbody.appendChild(tr);
         });
