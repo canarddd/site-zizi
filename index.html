@@ -17,6 +17,33 @@
       color: #fff;
       text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
       padding: 40px 20px 60px;
+      position: relative;
+    }
+
+    #status {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: default;
+      user-select: none;
+      z-index: 1000;
+    }
+    #status .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background-color: red;
+      box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    #status.connected .dot {
+      background-color: #4caf50;
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
     }
 
     h1 {
@@ -93,9 +120,41 @@
     td {
       text-align: right;
     }
+
+    footer {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9em;
+      color: #eee;
+      text-shadow: 1px 1px 3px black;
+      user-select: none;
+      font-weight: 600;
+      z-index: 1000;
+    }
+
+    footer .left-links a,
+    footer .right-link a {
+      color: #eee;
+      text-decoration: none;
+      margin-right: 15px;
+      transition: color 0.3s ease;
+    }
+    footer .left-links a:hover,
+    footer .right-link a:hover {
+      color: #ffd700;
+    }
   </style>
 </head>
 <body>
+  <div id="status">
+    <div class="dot"></div>
+    <div id="statusText">Déconnecté</div>
+  </div>
+
   <h1 id="title">Quelle est la taille du zizi de :</h1>
   <input type="text" id="nameInput" placeholder="Entrez un prénom..." autocomplete="off" />
   <div id="result"></div>
@@ -113,11 +172,35 @@
     <tbody></tbody>
   </table>
 
+  <footer>
+    <div class="left-links">
+      <a href="https://www.paypal.com/paypalme/AntoineGosset1" target="_blank" rel="noopener noreferrer">PayPal</a>
+      <a href="https://www.buymeacoffee.com/canardd" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>
+    </div>
+    <div class="right-link">
+      <a href="#" title="Pas encore de site supplémentaire">Autre sit</a>
+    </div>
+  </footer>
+
   <script>
     const input = document.getElementById("nameInput");
     const title = document.getElementById("title");
     const result = document.getElementById("result");
     const retryBtn = document.getElementById("retryBtn");
+    const statusDiv = document.getElementById("status");
+    const statusText = document.getElementById("statusText");
+
+    let connected = false;
+    function updateStatus() {
+      if (connected) {
+        statusDiv.classList.add("connected");
+        statusText.textContent = "Connecté";
+      } else {
+        statusDiv.classList.remove("connected");
+        statusText.textContent = "Déconnecté";
+      }
+    }
+    updateStatus();
 
     function afficherResultat(prenom, taille) {
       title.textContent = `La taille du zizi de ${prenom} est :`;
@@ -127,14 +210,19 @@
 
     async function envoyerTaille(prenom, taille) {
       try {
-        await fetch('http://localhost:3000/taille', {
+        const response = await fetch('http://localhost:3000/taille', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prenom, taille: parseFloat(taille) })
         });
+        if (!response.ok) throw new Error('Serveur indisponible');
         setTimeout(chargerStats, 3000);
+        connected = true;
       } catch (err) {
         console.error("Erreur envoi taille:", err);
+        connected = false;
+      } finally {
+        updateStatus();
       }
     }
 
@@ -177,10 +265,11 @@
     async function chargerStats() {
       try {
         const response = await fetch('http://localhost:3000/all');
+        if (!response.ok) throw new Error('Erreur serveur stats');
         const stats = await response.json();
 
         const tbody = document.querySelector('#statsTable tbody');
-        tbody.innerHTML = ""; // Vide tableau
+        tbody.innerHTML = "";
 
         if (stats.length === 0) {
           tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:10px;">Aucune donnée disponible.</td></tr>`;
@@ -196,8 +285,13 @@
           `;
           tbody.appendChild(tr);
         });
+
+        connected = true;
       } catch (error) {
         console.error("Erreur chargement stats:", error);
+        connected = false;
+      } finally {
+        updateStatus();
       }
     }
 
