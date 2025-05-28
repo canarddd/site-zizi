@@ -191,7 +191,7 @@
 
     async function envoyerTaille(prenom, taille) {
       try {
-        const response = await fetch('http://localhost:8080/taille', {
+        const response = await fetch('https://site-zizi-backend-production.up.railway.app/stats'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prenom, taille: parseFloat(taille) })
@@ -246,7 +246,7 @@
 
     async function chargerStats() {
       try {
-        const response = await fetch('http://localhost:8080/stats');
+        const response = await fetch('https://site-zizi-backend-production.up.railway.app/stats');
         if (!response.ok) throw new Error('Erreur serveur stats');
         const stats = await response.json();
 
