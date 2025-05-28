@@ -191,11 +191,12 @@
 
     async function envoyerTaille(prenom, taille) {
       try {
-        const response = await fetch('http://localhost:3000/taille', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prenom, taille: parseFloat(taille) })
-        });
+      const response = await fetch('http://localhost:8080/taille', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ prenom, taille: parseFloat(taille) })
+});
+
         if (!response.ok) throw new Error('Serveur indisponible');
         setTimeout(chargerStats, 3000);
         connected = true;
@@ -245,7 +246,7 @@
 
     async function chargerStats() {
       try {
-        const response = await fetch('http://localhost:3000/all');
+        const response = await fetch('http://localhost:8080/all');
         if (!response.ok) throw new Error('Erreur serveur stats');
         const stats = await response.json();
 
