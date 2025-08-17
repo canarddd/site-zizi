@@ -204,7 +204,7 @@
 
     function afficherResultat(prenom, taille) {
       title.textContent = `La taille du zizi de ${prenom} est :`;
-      result.textContent = `${taille} cm 🍆`;
+      result.textContent = taille;
       retryBtn.style.display = "inline-block";
     }
 
@@ -213,7 +213,7 @@
         const response = await fetch('http://localhost:3000/taille', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prenom, taille: parseFloat(taille) })
+          body: JSON.stringify({ prenom, taille: parseFloat(taille) || 0 })
         });
         if (!response.ok) throw new Error('Serveur indisponible');
         setTimeout(chargerStats, 3000);
@@ -246,9 +246,23 @@
 
         setTimeout(() => {
           clearInterval(suspense);
-          const finalSize = (Math.random() * 30 + 1).toFixed(1);
+
+          // Cas spéciaux
+          if (name.toLowerCase() === "antoine") {
+            afficherResultat(name, "Immense 🍆");
+            envoyerTaille(name, 50);
+            return;
+          }
+          if (name.toLowerCase() === "clémence" || name.toLowerCase() === "clemence") {
+            afficherResultat(name, "Tout petite 🌱");
+            envoyerTaille(name, 1);
+            return;
+          }
+
+          // Cas normal
+          const finalSize = (Math.random() * 30 + 1).toFixed(1) + " cm 🍆";
           afficherResultat(name, finalSize);
-          envoyerTaille(name, finalSize);
+          envoyerTaille(name, parseFloat(finalSize));
         }, 2000);
       }
     });
@@ -302,4 +316,3 @@
   </script>
 </body>
 </html>
-
