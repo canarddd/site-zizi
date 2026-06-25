@@ -174,7 +174,17 @@
 
   <footer>
     <div class="left-links">
-      <a href="buymeacoffee.com/canardd" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>
+      <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+        data-name="bmc-button"
+        data-slug="canardd"
+        data-color="#FFDD00"
+        data-emoji="☕"
+        data-font="Lato"
+        data-text="Buy me a coffee"
+        data-outline-color="#000000"
+        data-font-color="#000000"
+        data-coffee-color="#ffffff">
+      </script>
     </div>
     <div class="right-link">
       <a href="#" title="Pas encore de site supplémentaire">Autre site</a>
@@ -253,8 +263,18 @@
             return;
           }
         
-          // Cas normal
-          const finalSize = (Math.random() * 30 + 1).toFixed(1) + " cm 🍆";
+          // Vérifie si ce prénom existe déjà dans le stockage local
+          const savedSizes = JSON.parse(localStorage.getItem('savedSizes') || '{}');
+
+          let finalSize;
+          if (savedSizes[name.toLowerCase()]) {
+            finalSize = savedSizes[name.toLowerCase()];
+          } else {
+            finalSize = (Math.random() * 30 + 1).toFixed(1) + " cm 🍆";
+            savedSizes[name.toLowerCase()] = finalSize;
+            localStorage.setItem('savedSizes', JSON.stringify(savedSizes));
+          }
+
           afficherResultat(name, finalSize);
           envoyerTaille(name, parseFloat(finalSize));
         }, 2000);
