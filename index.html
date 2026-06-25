@@ -174,11 +174,10 @@
 
   <footer>
     <div class="left-links">
-      <a href="https://www.paypal.me/AntoineGosset1" target="_blank" rel="noopener noreferrer">PayPal</a>
-      <a href="https://www.buymeacoffee.com/canardd" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>
+      <a href="buymeacoffee.com/canardd" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>
     </div>
     <div class="right-link">
-      <a href="#" title="Pas encore de site supplémentaire">Autre sit</a>
+      <a href="#" title="Pas encore de site supplémentaire">Autre site</a>
     </div>
   </footer>
 
@@ -253,12 +252,7 @@
             envoyerTaille(name, 50);
             return;
           }
-          if (name.toLowerCase() === "clémence" || name.toLowerCase() === "clemence") {
-            afficherResultat(name, "Tout petite 🌱");
-            envoyerTaille(name, 1);
-            return;
-          }
-
+        
           // Cas normal
           const finalSize = (Math.random() * 30 + 1).toFixed(1) + " cm 🍆";
           afficherResultat(name, finalSize);
